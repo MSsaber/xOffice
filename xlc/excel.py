@@ -88,3 +88,78 @@ class excel:
         wb.save(self.excelfile)
         wb.close()
 
+    def findRow(self, sheetname, tablename, header, value):
+        wb = openpyxl.load_workbook(self.excelfile)
+        if not wb: return -1
+        ws = wb[sheetname]
+        if not ws: return -1
+        if tablename not in self.rect[sheetname].keys(): return -1
+        headerRow = self.rect[sheetname][tablename][0] + 1
+        targetCol = self.rect[sheetname][tablename][1]
+        for i in range(1,100):
+            cell = ws.cell(headerRow, i)
+            if header == cell.value:
+                targetCol = i
+                break
+        beginRow = headerRow + 1
+        endRow = self.rect[sheetname][tablename][2]
+        for i in range(beginRow, endRow):
+            cell = ws.cell(i, targetCol)
+            if cell.value == value:
+                wb.close()
+                return i
+        wb.close()
+        return -1
+    
+    def findCol(self, sheetname, tablename, header):
+        wb = openpyxl.load_workbook(self.excelfile)
+        if not wb: return -1
+        ws = wb[sheetname]
+        if not ws: return -1
+        if tablename not in self.rect[sheetname].keys(): return -1
+        headerRow = self.rect[sheetname][tablename][0] + 1
+        targetCol = self.rect[sheetname][tablename][1]
+        for i in range(1,100):
+            cell = ws.cell(headerRow, i)
+            if header == cell.value:
+                targetCol = i
+                break
+        wb.close()
+        return targetCol
+
+    def __findCell(self, sheetname, tablename, header, row):
+        wb = openpyxl.load_workbook(self.excelfile)
+        targetCol = self.findCol(sheetname, tablename, header)
+        if targetCol == -1: return None
+        return [wb, wb.cell(row, targetCol)]
+
+    def setCell(self, sheetname, tablename, header, row, value):
+        wb = openpyxl.load_workbook(self.excelfile)
+        if not wb: return False
+        ws = wb[sheetname]
+        if not ws: return False
+        if tablename not in self.rect[sheetname].keys(): return False
+        headerRow = self.rect[sheetname][tablename][0] + 1
+        targetCol = self.rect[sheetname][tablename][1]
+        for i in range(1,100):
+            cell = ws.cell(headerRow, i)
+            if header == cell.value:
+                targetCol = i
+                break
+        ws.cell(row, targetCol).value = value
+        wb.save(self.excelfile)
+        wb.close()
+        return True
+
+    def setDatas(self, sheetname, tablename, row, col, datas):
+        wb = openpyxl.load_workbook(self.excelfile)
+        if not wb: return False
+        ws = wb[sheetname]
+        if not ws: return False
+        if tablename not in self.rect[sheetname].keys(): return False
+        for c in range(len(datas)):
+            cell = ws.cell(row, c + col)
+            cell.value = datas[c]
+        wb.save(self.excelfile)
+        wb.close()
+        return True
