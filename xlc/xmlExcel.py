@@ -46,7 +46,7 @@ class xmlExcel:
     def parseXML(filename):
         dom = parse(filename)
         root = dom.getroot()
-        if root.tag != 'excel': raise exception("Invalid excel format")
+        if root.tag != 'excel': raise Exception("Invalid excel format")
         #xmlExcel.traverseNode(root, testNode)
         return xmlExcel(name=filename, attrib=root.attrib, nodes=root.getchildren())
 

@@ -2,7 +2,6 @@
 <sheet title="挂单记录">
   <table name="挂单表">
     <header name="策略条号">
-    1,2,3
     </header>
     <header name="档位">
     </header>
@@ -55,7 +54,6 @@
 <sheet title="撤单记录">
   <table name="撤单表">
     <header name="test">
-    3,4,5
     </header>
   </table> 
 </sheet>
