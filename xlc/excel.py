@@ -103,7 +103,7 @@ class excel:
                 break
         beginRow = headerRow + 1
         endRow = self.rect[sheetname][tablename][2]
-        for i in range(beginRow, endRow):
+        for i in range(beginRow, endRow + 1):
             cell = ws.cell(i, targetCol)
             if cell.value == value:
                 wb.close()
