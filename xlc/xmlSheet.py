@@ -1,7 +1,7 @@
 # !/usr/python
 # -*- coding:utf-8 -*-
 
-import xml
+import xml,sys
 
 class xmlSheet:
     def __init__(self, **argparam):
@@ -18,9 +18,14 @@ class xmlSheet:
     def __genTable(self, nodes):
         if nodes == None: return
         for node in nodes:
+            ns = None
+            if sys.version_info.minor < 9:
+                ns = node.getchildren()
+            else:
+                ns = list(node)
             if node.tag == 'table' and 'name' in node.attrib.keys():
                 self.tables.append(xmlTable(name=node.attrib['name'], attrib=node.attrib,
-                                            nodes=node.getchildren()))
+                                            nodes=ns))
 
     def createSheet(self):
         sheet = []

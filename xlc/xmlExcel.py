@@ -1,14 +1,17 @@
 # !/usr/python
 # -*- coding:utf-8 -*-
 
-import xml
+import xml,sys
 from xlc import xmlSheet
 from xml.etree.ElementTree import parse
 
 def testNode(node):
     print(node.tag)
     print(node.attrib)
-    print(node.getchildren())
+    if sys.version_info.minor < 9:
+        print(node.getchildren())
+    else:
+        print(list(node))
     if len(node.text): print(node.text)
 
 class xmlExcel:
@@ -25,9 +28,14 @@ class xmlExcel:
     def __genSheet(self, nodes):
         if nodes == None: return
         for node in nodes:
+            ns = None
+            if sys.version_info.minor < 9:
+                ns = node.getchildren()
+            else:
+                ns = list(node)
             if node.tag == 'sheet' and 'title' in node.attrib.keys():
                 self.sheets.append(xmlSheet.xmlSheet(name=node.attrib['title'], attrib=node.attrib,
-                                                    nodes=node.getchildren()))
+                                                    nodes=ns))
 
     def createExcelTp(self):
         excel = []
@@ -48,7 +56,12 @@ class xmlExcel:
         root = dom.getroot()
         if root.tag != 'excel': raise Exception("Invalid excel format")
         #xmlExcel.traverseNode(root, testNode)
-        return xmlExcel(name=filename, attrib=root.attrib, nodes=root.getchildren())
+        nodes = None
+        if sys.version_info.minor < 9:
+            nodes = root.getchildren()
+        else:
+            nodes = list(root)
+        return xmlExcel(name=filename, attrib=root.attrib, nodes=nodes)
 
     def traverseNode(node, func):
         for childnode in node:
