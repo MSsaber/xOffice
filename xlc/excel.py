@@ -75,7 +75,7 @@ class excel:
         if not wb: self.initExcel()
         ws = wb[sheetname]
         if not ws: return
-        if tablename not in self.rect[sheetname].keys(): return
+        if sheetname in self.rect.keys() and tablename not in self.rect[sheetname].keys(): return
         row = self.rect[sheetname][tablename][2] + 1
         col = self.rect[sheetname][tablename][1]
         for data in datas:
